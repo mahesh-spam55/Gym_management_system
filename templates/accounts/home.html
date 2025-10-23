@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Dashboard | Legit Fitness{% endblock %}
+{% block body_class %}theme-dashboard{% endblock %}
+{% block content %}
+  <style>
+    /* Colorful KPI cards */
+    .card-kpi { color: #fff; border: none; }
+    .card-kpi .card-body { padding: 1rem 1.25rem; }
+    .card-kpi .display-6, .card-kpi .h3 { color: #fff; }
+    .card-kpi .text-muted { color: rgba(255,255,255,0.85) !important; }
+    .card-kpi-primary { background: linear-gradient(135deg,#5aa6ff,#0d6efd); }
+    .card-kpi-success { background: linear-gradient(135deg,#34d399,#198754); }
+    .card-kpi-purple { background: linear-gradient(135deg,#a78bfa,#6f42c1); }
+    .kpi-actions .btn { border-color: rgba(255,255,255,0.6); color: #fff; }
+    .kpi-actions .btn:hover { background: rgba(255,255,255,0.15); }
+    /* Calendar accents */
+    .calendar-card .table thead th { background: #f8fafc; }
+    .legend-dot.bg-success { background-color: #20c997 !important; }
+    .legend-dot.bg-primary { background-color: #6366f1 !important; }
+    .evt-dot.bg-success { background-color: #20c997 !important; }
+    .evt-dot.bg-primary { background-color: #6366f1 !important; }
+    .btn-cal { border-color: #94a3b8; color: #475569; }
+    .btn-cal:hover { background: #e2e8f0; }
+  </style>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Dashboard</h3>
+    <small class="text-muted">{{ dash_month_label }}</small>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card card-kpi card-kpi-success h-100">
+        <div class="card-body">
+          <div class="text-muted">Total Members</div>
+          <div class="display-6 fw-semibold">{{ dash_total_members }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card card-kpi card-kpi-purple h-100">
+        <div class="card-body d-flex flex-column gap-2">
+          <div class="text-muted">Members All Lists</div>
+          <div class="d-flex gap-2 kpi-actions">
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'members:list' %}">Show All</a>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'members:list' %}?joined_month={{ dash_month_param }}">New List</a>
+          </div>
+          <div class="small text-muted">New this month: {{ dash_current_month_bookings }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="card card-kpi card-kpi-primary h-100">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+          <div>
+            <div class="text-muted">Earnings</div>
+            <div class="display-6 fw-semibold">₹ {{ dash_total_revenue|intcomma }}</div>
+            <div class="small text-muted">Total revenue</div>
+          </div>
+          <div class="text-end">
+            <div class="text-muted">This Month</div>
+            <div class="h3 fw-semibold mb-0">₹ {{ dash_current_month_revenue|intcomma }}</div>
+            <div class="small text-muted">{{ dash_month_label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mt-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="fw-semibold">Earnings Charts</div>
+        <small class="text-muted">Last 12 months and daily this month</small>
+      </div>
+      <div class="row g-3">
+        <div class="col-12 col-lg-7">
+          <canvas id="earningsMonthlyChart" height="140"></canvas>
+        </div>
+        <div class="col-12 col-lg-5">
+          <canvas id="earningsDailyChart" height="140"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ earnings_monthly_labels|json_script:"eml" }}
+  {{ earnings_monthly_values|json_script:"emv" }}
+  {{ earnings_daily_labels|json_script:"edl" }}
+  {{ earnings_daily_values|json_script:"edv" }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    (function() {
+      const monthlyCtx = document.getElementById('earningsMonthlyChart');
+      const dailyCtx = document.getElementById('earningsDailyChart');
+
+      const monthlyLabels = JSON.parse(document.getElementById('eml').textContent);
+      const monthlyValues = JSON.parse(document.getElementById('emv').textContent);
+      const dailyLabels = JSON.parse(document.getElementById('edl').textContent);
+      const dailyValues = JSON.parse(document.getElementById('edv').textContent);
+
+      const fmt = (v) => '₹ ' + (v||0).toLocaleString();
+
+      // Gradients
+      const gradMonthly = monthlyCtx.getContext('2d').createLinearGradient(0, 0, 0, 140);
+      gradMonthly.addColorStop(0, 'rgba(13,110,253,0.35)');
+      gradMonthly.addColorStop(1, 'rgba(13,110,253,0.02)');
+      const gradDaily = dailyCtx.getContext('2d').createLinearGradient(0, 0, 0, 140);
+      gradDaily.addColorStop(0, 'rgba(25,135,84,0.6)');
+      gradDaily.addColorStop(1, 'rgba(25,135,84,0.1)');
+
+      // Soft shadow plugin
+      const shadowPlugin = {
+        id: 'softShadow',
+        beforeDatasetsDraw(chart, args, pluginOptions) {
+          const {ctx} = chart;
+          ctx.save();
+          ctx.shadowColor = 'rgba(15,23,42,0.15)';
+          ctx.shadowBlur = 12;
+          ctx.shadowOffsetY = 6;
+        },
+        afterDatasetsDraw(chart) {
+          chart.ctx.restore();
+        }
+      };
+
+      // Register shadow plugin globally
+      Chart.register(shadowPlugin);
+
+      const monthlyChart = new Chart(monthlyCtx, {
+        type: 'line',
+        data: {
+          labels: monthlyLabels,
+          datasets: [{
+            label: 'Monthly Earnings',
+            data: monthlyValues,
+            tension: 0.35,
+            borderColor: '#0d6efd',
+            backgroundColor: gradMonthly,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              grid: { color: 'rgba(15,23,42,0.05)' },
+              ticks: { color: '#475569' }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(15,23,42,0.06)' },
+              ticks: {
+                color: '#475569',
+                callback: (v) => (v ? '₹ ' + Number(v).toLocaleString() : '₹ 0')
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#111827',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              titleColor: '#e5e7eb',
+              bodyColor: '#e5e7eb',
+              callbacks: { label: ctx => fmt(ctx.parsed.y) }
+            }
+          },
+          elements: { line: { borderWidth: 2.25 } },
+          onClick: (evt, els) => {
+            if (els.length) {
+              const idx = els[0].index;
+              const label = monthlyLabels[idx]; // e.g., 'Oct 2025'
+              // Build YYYY-MM from label
+              const parts = label.split(' ');
+              const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(parts[0]) + 1;
+              const year = parseInt(parts[1]);
+              const mstr = String(mon).padStart(2,'0');
+              window.location.href = `/fees/?paid_month=${year}-${mstr}`;
+            }
+          }
+        }
+      });
+
+      const dailyChart = new Chart(dailyCtx, {
+        type: 'bar',
+        data: {
+          labels: dailyLabels,
+          datasets: [{
+            label: 'Daily Earnings',
+            data: dailyValues,
+            backgroundColor: gradDaily,
+            borderColor: 'rgba(25,135,84,1)',
+            borderWidth: 1.2,
+            borderRadius: 6,
+            maxBarThickness: 22,
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#475569' }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(15,23,42,0.06)' },
+              ticks: {
+                color: '#475569',
+                callback: (v) => (v ? '₹ ' + Number(v).toLocaleString() : '₹ 0')
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#111827',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              titleColor: '#e5e7eb',
+              bodyColor: '#e5e7eb',
+              callbacks: { label: ctx => fmt(ctx.parsed.y) }
+            }
+          },
+          onClick: (evt, els) => {
+            if (els.length) {
+              const idx = els[0].index;
+              const day = dailyLabels[idx];
+              const y = {{ cal_year }};
+              const m = String({{ cal_month }}).padStart(2, '0');
+              const d = String(day).padStart(2, '0');
+              window.location.href = `/fees/?paid_on=${y}-${m}-${d}`;
+            }
+          }
+        }
+      });
+    })();
+  </script>
+
+  
+
+  <div class="card shadow-sm calendar-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <div class="fw-semibold">Calendar</div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+          <a class="btn btn-sm btn-cal" href="?year={{ prev_year }}&month={{ prev_month }}">◀ Prev</a>
+          <span class="small text-muted">{{ dash_month_label }}</span>
+          <a class="btn btn-sm btn-cal" href="?year={{ next_year }}&month={{ next_month }}">Next ▶</a>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mb-2 gap-3 small">
+        <span><span class="legend-dot bg-success me-1"></span>Payments</span>
+        <span><span class="legend-dot bg-primary me-1"></span>New members</span>
+      </div>
+      <style>
+        .legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%}
+        .evt-dots{display:flex;gap:6px;flex-wrap:wrap}
+        .evt-dot{display:inline-block;width:8px;height:8px;border-radius:50%}
+        .cal-day{min-height:96px}
+        .cal-today{outline:2px solid #0d6efd; outline-offset:-2px; background:rgba(13,110,253,.05)}
+      </style>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              {% for wd in weekday_labels %}
+                <th class="text-center">{{ wd }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for week in calendar_weeks %}
+            <tr>
+              {% for day in week %}
+              <td class="p-2 cal-day {% if not day.in_month %}text-muted bg-light{% endif %} {% if day.date == today_date %}cal-today{% endif %}">
+                <div class="d-flex justify-content-between align-items-start">
+                  <span class="small fw-semibold">{{ day.date.day }}</span>
+                  <div class="evt-dots" title="Payments: {{ day.payments }} | New: {{ day.new_members }}">
+                    {% if day.payments %}
+                      <span class="evt-dot bg-success"></span>
+                    {% endif %}
+                    {% if day.new_members %}
+                      <span class="evt-dot bg-primary"></span>
+                    {% endif %}
+                  </div>
+                </div>
+                
+              </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

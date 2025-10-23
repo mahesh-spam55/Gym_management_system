@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Delete Member | Legit Fitness{% endblock %}
+{% block content %}
+  <h3>Delete Member</h3>
+  <p>Are you sure you want to delete <strong>{{ object }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <a href="{% url 'members:detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+  </form>
+{% endblock %}

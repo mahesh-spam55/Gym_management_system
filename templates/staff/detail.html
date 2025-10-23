@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block body_class %}theme-staff{% endblock %}
+{% block title %}Staff Details | Gym Manager{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Staff Details</h3>
+    <div>
+      <a class="btn btn-secondary" href="{% url 'staff:list' %}">Back</a>
+    </div>
+  </div>
+  <dl class="row">
+    <dt class="col-sm-3">Staff ID</dt>
+    <dd class="col-sm-9">{{ object.staff_id }}</dd>
+
+    <dt class="col-sm-3">Staff Name</dt>
+    <dd class="col-sm-9">{{ object.name }}</dd>
+
+    <dt class="col-sm-3">Contact</dt>
+    <dd class="col-sm-9">{{ object.contact }}</dd>
+
+    <dt class="col-sm-3">Role</dt>
+    <dd class="col-sm-9">{{ object.role }}</dd>
+  </dl>
+{% endblock %}

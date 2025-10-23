@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block body_class %}theme-staff{% endblock %}
+{% block title %}Staff Form | Gym Manager{% endblock %}
+{% block content %}
+  <h3>Add Staff</h3>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+      <label for="id_staff_id" class="form-label">Staff ID</label>
+      {{ form.staff_id }}
+    </div>
+    <div class="mb-3">
+      <label for="id_name" class="form-label">Staff Name</label>
+      {{ form.name }}
+    </div>
+    <div class="mb-3">
+      <label for="id_contact" class="form-label">Contact</label>
+      {{ form.contact }}
+    </div>
+    <div class="mb-3">
+      <label for="id_role" class="form-label">Role</label>
+      {{ form.role }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block body_class %}theme-fees{% endblock %}
+{% block title %}Add Payment | Legit Fitness{% endblock %}
+{% block content %}
+  <h3>Add Payment</h3>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+      <label for="id_paid_on" class="form-label">Date</label>
+      {{ form.paid_on }}
+    </div>
+    <div class="mb-3">
+      <label for="id_member" class="form-label">Member</label>
+      {{ form.member }}
+    </div>
+    <div class="mb-3">
+      <label for="id_amount" class="form-label">Amount</label>
+      {{ form.amount }}
+    </div>
+    <div class="mb-3">
+      <label for="id_transaction_type" class="form-label">Transaction Type</label>
+      {{ form.transaction_type }}
+    </div>
+    <div class="mb-3">
+      <label for="id_membership_type" class="form-label">Membership Type</label>
+      {{ form.membership_type }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% url 'fees:list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}
