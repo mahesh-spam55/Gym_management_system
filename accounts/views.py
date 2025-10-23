@@ -157,11 +157,9 @@ class HomeView(LoginRequiredMixin, TemplateView):
         )
 
         # Detailed chart data
-        # 1) Last 12 months totals (oldest -> newest)
-        months12 = []
-        for i in range(-11, 1):
-            y, m = month_add(month_start.year, month_start.month, i)
-            months12.append((y, m))
+        # 1) Calendar year totals (Jan -> Dec of the selected year)
+        year = month_start.year
+        months12 = [(year, m) for m in range(1, 13)]
         monthly_labels = [f"{calendar.month_abbr[m]} {y}" for (y, m) in months12]
         monthly_values = []
         for (y, m) in months12:
