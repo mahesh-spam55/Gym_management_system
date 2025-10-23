@@ -28,6 +28,10 @@ small,.small{opacity:.9}
 .navbar .btn{border-color:#fff;color:#fff}
 .navbar .btn:hover{background:rgba(255,255,255,.15)}
 
+.navbar .navbar-brand{font-family:'Montserrat','Nunito',sans-serif;font-weight:800;font-size:1.35rem;letter-spacing:.5px;text-transform:uppercase}
+.navbar .navbar-text{font-size:1rem;font-weight:600}
+.navbar .btn{font-size:.975rem;font-weight:600}
+
 /* Sidebar */
 .list-group .list-group-item{border:0;border-left:4px solid transparent;padding:.8rem 1rem;background:transparent;transition:all .15s ease}
 .list-group .list-group-item:hover{background:#e9f2ff;border-left-color:var(--lf-primary)}
