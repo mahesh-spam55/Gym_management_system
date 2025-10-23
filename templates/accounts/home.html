@@ -94,7 +94,6 @@
     (function() {
       const monthlyCtx = document.getElementById('earningsMonthlyChart');
       const dailyCtx = document.getElementById('earningsDailyChart');
-
       const monthlyLabels = JSON.parse(document.getElementById('eml').textContent);
       const monthlyValues = JSON.parse(document.getElementById('emv').textContent);
       const dailyLabels = JSON.parse(document.getElementById('edl').textContent);
@@ -127,7 +126,6 @@
 
       // Register shadow plugin globally
       Chart.register(shadowPlugin);
-
       const monthlyChart = new Chart(monthlyCtx, {
         type: 'line',
         data: {
