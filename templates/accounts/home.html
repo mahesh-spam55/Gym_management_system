@@ -72,14 +72,11 @@
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="fw-semibold">Earnings Charts</div>
-        <small class="text-muted">Last 12 months and daily this month</small>
+        <small class="text-muted">Last 12 months</small>
       </div>
       <div class="row g-3">
-        <div class="col-12 col-lg-7">
+        <div class="col-12">
           <canvas id="earningsMonthlyChart" height="140"></canvas>
-        </div>
-        <div class="col-12 col-lg-5">
-          <canvas id="earningsDailyChart" height="140"></canvas>
         </div>
       </div>
     </div>
@@ -87,17 +84,12 @@
 
   {{ earnings_monthly_labels|json_script:"eml" }}
   {{ earnings_monthly_values|json_script:"emv" }}
-  {{ earnings_daily_labels|json_script:"edl" }}
-  {{ earnings_daily_values|json_script:"edv" }}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
     (function() {
       const monthlyCtx = document.getElementById('earningsMonthlyChart');
-      const dailyCtx = document.getElementById('earningsDailyChart');
       const monthlyLabels = JSON.parse(document.getElementById('eml').textContent);
       const monthlyValues = JSON.parse(document.getElementById('emv').textContent);
-      const dailyLabels = JSON.parse(document.getElementById('edl').textContent);
-      const dailyValues = JSON.parse(document.getElementById('edv').textContent);
 
       const fmt = (v) => '₹ ' + (v||0).toLocaleString();
 
@@ -105,9 +97,6 @@
       const gradMonthly = monthlyCtx.getContext('2d').createLinearGradient(0, 0, 0, 140);
       gradMonthly.addColorStop(0, 'rgba(13,110,253,0.35)');
       gradMonthly.addColorStop(1, 'rgba(13,110,253,0.02)');
-      const gradDaily = dailyCtx.getContext('2d').createLinearGradient(0, 0, 0, 140);
-      gradDaily.addColorStop(0, 'rgba(25,135,84,0.6)');
-      gradDaily.addColorStop(1, 'rgba(25,135,84,0.1)');
 
       // Soft shadow plugin
       const shadowPlugin = {
@@ -181,60 +170,6 @@
               const year = parseInt(parts[1]);
               const mstr = String(mon).padStart(2,'0');
               window.location.href = `/fees/?paid_month=${year}-${mstr}`;
-            }
-          }
-        }
-      });
-
-      const dailyChart = new Chart(dailyCtx, {
-        type: 'bar',
-        data: {
-          labels: dailyLabels,
-          datasets: [{
-            label: 'Daily Earnings',
-            data: dailyValues,
-            backgroundColor: gradDaily,
-            borderColor: 'rgba(25,135,84,1)',
-            borderWidth: 1.2,
-            borderRadius: 6,
-            maxBarThickness: 22,
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { color: '#475569' }
-            },
-            y: {
-              beginAtZero: true,
-              grid: { color: 'rgba(15,23,42,0.06)' },
-              ticks: {
-                color: '#475569',
-                callback: (v) => (v ? '₹ ' + Number(v).toLocaleString() : '₹ 0')
-              }
-            }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#111827',
-              borderColor: 'rgba(255,255,255,0.1)',
-              borderWidth: 1,
-              titleColor: '#e5e7eb',
-              bodyColor: '#e5e7eb',
-              callbacks: { label: ctx => fmt(ctx.parsed.y) }
-            }
-          },
-          onClick: (evt, els) => {
-            if (els.length) {
-              const idx = els[0].index;
-              const day = dailyLabels[idx];
-              const y = {{ cal_year }};
-              const m = String({{ cal_month }}).padStart(2, '0');
-              const d = String(day).padStart(2, '0');
-              window.location.href = `/fees/?paid_on=${y}-${m}-${d}`;
             }
           }
         }
