@@ -13,13 +13,15 @@
   <link rel="stylesheet" href="{% static 'css/theme.css' %}">
 </head>
 <body class="{% block body_class %}{% endblock %}">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4" aria-label="Main navigation">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Legit Fitness</a>
     <div class="d-flex">
       {% if user.is_authenticated %}
-        <span class="navbar-text me-3">Hi, {{ user.get_username }}</span>
-        <a class="btn btn-outline-light btn-sm" href="{% url 'logout' %}">Logout</a>
+        <span class="navbar-text me-3" aria-label="Signed in user">Hi, {{ user.get_username }}</span>
+        <a class="btn btn-outline-light btn-sm" href="{% url 'logout' %}" aria-label="Logout">Logout</a>
+      {% else %}
+        <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}" aria-label="Login">Login</a>
       {% endif %}
     </div>
   </div>
@@ -28,12 +30,12 @@
   <div class="row">
     {% if user.is_authenticated %}
     <aside class="col-12 col-md-3 col-lg-2 mb-3">
-      <div class="lf-sidebar rounded-3 shadow-sm p-2">
-        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'home' %}"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
-        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'members:list' %}"><i class="bi bi-people"></i><span>Members</span></a>
-        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'fees:list' %}"><i class="bi bi-cash-stack"></i><span>Fees</span></a>
-        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'trainers:list' %}"><i class="bi bi-person-workspace"></i><span>Trainers</span></a>
-        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'staff:list' %}"><i class="bi bi-person-badge"></i><span>Staff</span></a>
+      <div class="lf-sidebar rounded-3 shadow-sm p-2" role="navigation" aria-label="Sidebar navigation">
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'home' %}" aria-label="Dashboard"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Dashboard</span></a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'members:list' %}" aria-label="Members"><i class="bi bi-people" aria-hidden="true"></i><span>Members</span></a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'fees:list' %}" aria-label="Earnings"><i class="bi bi-cash-stack" aria-hidden="true"></i><span>Earnings</span></a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'trainers:list' %}" aria-label="Trainers"><i class="bi bi-person-workspace" aria-hidden="true"></i><span>Trainers</span></a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{% url 'staff:list' %}" aria-label="Staff"><i class="bi bi-person-badge" aria-hidden="true"></i><span>Staff</span></a>
       </div>
     </aside>
     <main class="col-12 col-md-9 col-lg-10">
