@@ -1,0 +1,68 @@
+/* Legit Fitness Colorful Theme */
+:root{
+  --lf-primary:#0d6efd; /* blue */
+  --lf-primary-2:#5aa6ff;
+  --lf-success:#20c997; /* teal */
+  --lf-purple:#6f42c1;
+  --lf-bg:#f5f7fb;
+  --lf-card:#ffffff;
+  --lf-text:#1f2937;
+}
+
+/* Per-module themes (override CSS variables) */
+body.theme-dashboard{ --lf-primary:#0d6efd; --lf-purple:#6f42c1; }
+body.theme-members{ --lf-primary:#10b981; --lf-purple:#059669; }
+body.theme-fees{ --lf-primary:#f59e0b; --lf-purple:#f97316; }
+body.theme-staff{ --lf-primary:#ec4899; --lf-purple:#db2777; }
+body.theme-trainers{ --lf-primary:#06b6d4; --lf-purple:#0ea5e9; }
+
+html,body{background:var(--lf-bg); font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif; color: var(--lf-text);}
+h1,h2,h3,h4,h5,h6{font-weight:700; font-family: 'Montserrat', 'Nunito', sans-serif}
+small,.small{opacity:.9}
+
+/* Navbar */
+.navbar{
+  background: linear-gradient(90deg, var(--lf-primary) 0%, var(--lf-purple) 100%) !important;
+}
+.navbar .navbar-brand,.navbar .navbar-text{color:#fff !important}
+.navbar .btn{border-color:#fff;color:#fff}
+.navbar .btn:hover{background:rgba(255,255,255,.15)}
+
+/* Sidebar */
+.list-group .list-group-item{border:0;border-left:4px solid transparent;padding:.8rem 1rem;background:transparent;transition:all .15s ease}
+.list-group .list-group-item:hover{background:#e9f2ff;border-left-color:var(--lf-primary)}
+.list-group .list-group-item.active{background:#e9f2ff;color:var(--lf-text);border-left-color:var(--lf-primary)}
+
+/* Cards */
+.card{border:0;border-radius:1rem;box-shadow:0 6px 20px rgba(15,23,42,.08)}
+.card .card-header{background:transparent;border-bottom:0}
+
+/* Buttons */
+.btn-primary{background:var(--lf-primary);border-color:var(--lf-primary)}
+.btn-success{background:var(--lf-success);border-color:var(--lf-success)}
+.btn-outline-secondary{color:var(--lf-primary);border-color:#b6cffd}
+.btn-outline-secondary:hover{background:#e9f2ff}
+.btn, .form-control, .form-select { border-radius: .6rem; }
+
+/* Tables */
+.table thead th{background:#eef2ff;border-bottom:0;color:#1e293b}
+.table{--bs-table-striped-bg:#f6f9ff}
+.table-bordered{border-radius:.6rem; overflow:hidden}
+
+/* Forms */
+.form-control,.form-select{border-color:#dbeafe}
+.form-control:focus,.form-select:focus{border-color:var(--lf-primary);box-shadow:0 0 0 .2rem rgba(13,110,253,.15)}
+label{font-weight:500;color:#334155}
+
+/* Badges */
+.badge.bg-primary-subtle{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+.badge.bg-success-subtle{background:#eafaf5;color:#065f46;border-color:#a7f3d0}
+
+/* Modal */
+.modal-content{border:0;border-radius:.75rem}
+
+/* Calendar tweaks (shared with page inline styles) */
+.cal-today{outline:2px solid var(--lf-primary);outline-offset:-2px;background:rgba(13,110,253,.05)}
+
+/* Footer spacing helper */
+.page-spacer{height:2rem}
