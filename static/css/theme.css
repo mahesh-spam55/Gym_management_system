@@ -16,7 +16,7 @@ body.theme-fees{ --lf-primary:#f59e0b; --lf-purple:#f97316; }
 body.theme-staff{ --lf-primary:#ec4899; --lf-purple:#db2777; }
 body.theme-trainers{ --lf-primary:#06b6d4; --lf-purple:#0ea5e9; }
 
-html,body{background:var(--lf-bg); font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif; color: var(--lf-text);}
+html,body{background:var(--lf-bg); font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif; color: var(--lf-text); text-transform:uppercase}
 h1,h2,h3,h4,h5,h6{font-weight:700; font-family: 'Montserrat', 'Nunito', sans-serif; text-transform:uppercase}
 small,.small{opacity:.9}
 
