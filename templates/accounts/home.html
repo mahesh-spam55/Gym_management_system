@@ -51,19 +51,18 @@
     </div>
     <div class="col-12 col-md-6 col-lg-3">
       <div class="card card-kpi card-kpi-primary h-100">
-        <div class="card-body">
-          <div class="text-muted">Total Earnings</div>
-          <div class="display-6 fw-semibold">₹ {{ dash_total_revenue|intcomma }}</div>
-          <div class="small text-muted">All-time revenue</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card card-kpi card-kpi-success h-100">
-        <div class="card-body">
-          <div class="text-muted">This Month</div>
-          <div class="display-6 fw-semibold">₹ {{ dash_current_month_revenue|intcomma }}</div>
-          <div class="small text-muted">{{ dash_month_label }}</div>
+        <div class="card-body d-flex flex-column gap-2">
+          <div class="text-muted">Earnings</div>
+          <div class="d-flex gap-3 kpi-actions">
+            <div class="d-flex flex-column align-items-start">
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'fees:list' %}">Total</a>
+              <small class="mt-1 text-muted">₹ {{ dash_total_revenue|intcomma }}</small>
+            </div>
+            <div class="d-flex flex-column align-items-start">
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'fees:list' %}?paid_month={{ dash_month_param }}">This Month</a>
+              <small class="mt-1 text-muted">₹ {{ dash_current_month_revenue|intcomma }}</small>
+            </div>
+          </div>
         </div>
       </div>
     </div>
