@@ -2,8 +2,8 @@
 {% block body_class %}theme-trainers{% endblock %}
 {% block title %}Trainer Form | Gym Manager{% endblock %}
 {% block content %}
-  <h3>{% if object %}Edit Trainer{% else %}Add Trainer{% endif %}</h3>
-  <form method="post" novalidate>
+  <h3 class="text-uppercase">{% if object %}Edit Trainer{% else %}Add Trainer{% endif %}</h3>
+  <form method="post" novalidate class="text-uppercase">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="mb-3">
@@ -26,3 +26,4 @@
     <a href="{% url 'trainers:list' %}" class="btn btn-secondary">Cancel</a>
   </form>
 {% endblock %}
+

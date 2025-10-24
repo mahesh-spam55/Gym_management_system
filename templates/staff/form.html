@@ -2,8 +2,8 @@
 {% block body_class %}theme-staff{% endblock %}
 {% block title %}Staff Form | Gym Manager{% endblock %}
 {% block content %}
-  <h3>Add Staff</h3>
-  <form method="post" novalidate>
+  <h3 class="text-uppercase">Add Staff</h3>
+  <form method="post" novalidate class="text-uppercase">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="mb-3">

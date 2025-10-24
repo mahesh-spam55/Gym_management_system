@@ -2,8 +2,8 @@
 {% block body_class %}theme-fees{% endblock %}
 {% block title %}Add Payment | Legit Fitness{% endblock %}
 {% block content %}
-  <h3>Add Payment</h3>
-  <form method="post" novalidate>
+  <h3 class="text-uppercase">Add Payment</h3>
+  <form method="post" novalidate class="text-uppercase">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="mb-3">
@@ -30,3 +30,4 @@
     <a href="{% url 'fees:list' %}" class="btn btn-secondary">Cancel</a>
   </form>
 {% endblock %}
+

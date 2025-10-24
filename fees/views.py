@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.views.generic import ListView, CreateView, DeleteView
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from datetime import date
 
@@ -37,7 +37,8 @@ class PaymentListView(LoginRequiredMixin, ListView):
                 qs = qs.filter(paid_on__gte=start, paid_on__lt=end)
             except Exception:
                 pass
-        return qs
+        # Arrange consecutively by ascending ID
+        return qs.order_by("id")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,14 +59,11 @@ class PaymentCreateView(LoginRequiredMixin, CreateView):
         payment: Payment = self.object
         member = payment.member
 
-        # Map membership_type to months
-        type_to_months = {
-            payment.MembershipType.THREE: 3,
-            payment.MembershipType.SIX: 6,
-            payment.MembershipType.NINE: 9,
-            payment.MembershipType.TWELVE: 12,
-        }
-        months = type_to_months.get(payment.membership_type, 0)
+        # Determine months directly from the selected membership_type value (numeric string)
+        try:
+            months = int(payment.membership_type)
+        except (TypeError, ValueError):
+            months = 0
 
         # Determine start base date
         candidates = [payment.paid_on]
@@ -87,3 +85,12 @@ class PaymentDeleteView(LoginRequiredMixin, DeleteView):
     model = Payment
     template_name = "fees/confirm_delete.html"
     success_url = reverse_lazy("fees:list")
+
+
+class PaymentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Payment
+    form_class = PaymentForm
+    template_name = "fees/form.html"
+
+    def get_success_url(self):
+        return reverse("fees:list")

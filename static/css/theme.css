@@ -20,6 +20,17 @@ html,body{background:var(--lf-bg); font-family: 'Nunito', system-ui, -apple-syst
 h1,h2,h3,h4,h5,h6{font-weight:700; font-family: 'Montserrat', 'Nunito', sans-serif; text-transform:uppercase}
 small,.small{opacity:.9}
 
+/* Colored Page Title (adapts to current module colors) */
+.page-title{
+  background: linear-gradient(90deg, var(--lf-primary) 0%, var(--lf-purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: var(--lf-primary); /* fallback for older browsers */
+  -webkit-text-fill-color: transparent; /* Safari/Chrome */
+  display: inline-block; /* ensure background-clip applies to text bounds */
+  letter-spacing: .6px;
+}
+
 /* Navbar */
 .navbar{
   background: linear-gradient(90deg, var(--lf-primary) 0%, var(--lf-purple) 100%) !important;

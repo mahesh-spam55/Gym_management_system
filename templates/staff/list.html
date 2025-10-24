@@ -3,28 +3,44 @@
 {% block title %}Staff | Gym Manager{% endblock %}
 {% block content %}
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="mb-0">Staff</h3>
+    <h3 class="mb-0 text-uppercase page-title">Staff</h3>
     <a href="{% url 'staff:create' %}" class="btn btn-primary">Add Staff</a>
   </div>
   <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped text-uppercase">
       <thead>
         <tr>
+          <th>#</th>
           <th>Staff ID</th>
           <th>Staff Name</th>
           <th>Contact</th>
           <th>Role</th>
-          <th></th>
+          <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for s in staff %}
         <tr>
+          <td>{{ forloop.counter }}</td>
           <td>{{ s.staff_id }}</td>
           <td>{{ s.name }}</td>
           <td>{{ s.contact }}</td>
           <td>{{ s.role }}</td>
           <td class="text-end">
+            <div class="btn-group" role="group" aria-label="Reorder">
+              {% if not forloop.first %}
+              <form action="{% url 'staff:move_up' s.pk %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Up</button>
+              </form>
+              {% endif %}
+              {% if not forloop.last %}
+              <form action="{% url 'staff:move_down' s.pk %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Down</button>
+              </form>
+              {% endif %}
+            </div>
             <a class="btn btn-sm btn-outline-secondary" href="{% url 'staff:detail' s.pk %}">View</a>
             <a class="btn btn-sm btn-outline-primary" href="{% url 'staff:edit' s.pk %}">Edit</a>
             <a class="btn btn-sm btn-outline-danger" href="{% url 'staff:delete' s.pk %}">Delete</a>
@@ -32,10 +48,11 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5" class="text-center">No staff yet.</td>
+          <td colspan="6" class="text-center">No staff yet.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 {% endblock %}
+

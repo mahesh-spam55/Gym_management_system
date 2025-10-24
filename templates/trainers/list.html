@@ -3,28 +3,44 @@
 {% block title %}Trainers | Gym Manager{% endblock %}
 {% block content %}
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="mb-0">Trainers</h3>
+    <h3 class="mb-0 text-uppercase page-title">Trainers</h3>
     <a href="{% url 'trainers:create' %}" class="btn btn-primary">Add Trainer</a>
   </div>
   <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped text-uppercase">
       <thead>
         <tr>
+          <th>#</th>
           <th>Trainer ID</th>
           <th>Trainer Name</th>
           <th>Contact</th>
           <th>Specialization</th>
-          <th></th>
+          <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for t in trainers %}
         <tr>
+          <td>{{ forloop.counter }}</td>
           <td>{{ t.employee_id }}</td>
           <td>{{ t.first_name }} {{ t.last_name }}</td>
           <td>{{ t.contact }}</td>
           <td>{{ t.specialization }}</td>
           <td class="text-end">
+            <div class="btn-group" role="group" aria-label="Reorder">
+              {% if not forloop.first %}
+              <form action="{% url 'trainers:move_up' t.pk %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Up</button>
+              </form>
+              {% endif %}
+              {% if not forloop.last %}
+              <form action="{% url 'trainers:move_down' t.pk %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Down</button>
+              </form>
+              {% endif %}
+            </div>
             <a class="btn btn-sm btn-outline-secondary" href="{% url 'trainers:detail' t.pk %}">View</a>
             <a class="btn btn-sm btn-outline-primary" href="{% url 'trainers:edit' t.pk %}">Edit</a>
             <a class="btn btn-sm btn-outline-danger" href="{% url 'trainers:delete' t.pk %}">Delete</a>
@@ -32,10 +48,11 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5" class="text-center">No trainers yet.</td>
+          <td colspan="6" class="text-center">No trainers yet.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 {% endblock %}
+

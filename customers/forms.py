@@ -15,3 +15,7 @@ class MemberForm(forms.ModelForm):
         widgets = {
             "date_of_joining": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
         }
+
+    def clean_member_id(self):
+        value = self.cleaned_data.get("member_id")
+        return value or None

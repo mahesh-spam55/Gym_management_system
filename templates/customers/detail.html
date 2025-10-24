@@ -2,7 +2,7 @@
 {% block title %}Member Details | Legit Fitness{% endblock %}
 {% block body_class %}theme-members{% endblock %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex justify-content-between align-items-center mb-3 text-uppercase">
     <h3 class="mb-0">Member Details</h3>
     <div>
       <a class="btn btn-outline-primary" href="{% url 'members:edit' object.pk %}">Edit</a>
@@ -10,7 +10,7 @@
       <a class="btn btn-secondary" href="{% url 'members:list' %}">Back</a>
     </div>
   </div>
-  <dl class="row">
+  <dl class="row text-uppercase">
     <dt class="col-sm-3">Member ID</dt>
     <dd class="col-sm-9">{{ object.member_id }}</dd>
 
@@ -30,3 +30,4 @@
     <dd class="col-sm-9">{{ object.membership_due_date }}</dd>
   </dl>
 {% endblock %}
+
